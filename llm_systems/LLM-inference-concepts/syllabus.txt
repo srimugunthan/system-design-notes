@@ -1,0 +1,44 @@
+
+SYLLABUS
+L1
+The Inference Stack
+Full pipeline, tokenization, forward pass, autoregressive loop
+L2
+Transformer Deep Dive
+Attention (MHA/MQA/GQA), embeddings, positional encoding
+L3
+Prefill, Decode & KV Cache
+KV cache mechanics, chunked prefill, prefix caching, prompt caching. KV cache compression: GQA, token eviction, H2O, StreamingLLM
+L4
+GPU Architecture & Roofline
+SMs, tensor cores, compute vs. memory bound
+L5
+Quantization
+FP16, BF16, INT8, INT4, GPTQ, AWQ, GGUF format
+L6
+Speculative Decoding
+Draft-target, n-gram, EAGLE, Medusa, acceptance sampling
+L7
+FlashAttention, Kernel Fusion & Inference Engines
+IO-aware tiling, online softmax, fused kernels. PagedAttention, continuous/dynamic/in-flight batching, vLLM scheduler internals. Engines: vLLM, SGLang, TensorRT-LLM
+
+MoE & Model Parallelism
+Mixture of experts, expert routing strategies, load balancing, capacity factors. Tensor/pipeline/expert parallelism
+L9
+Edge Deployment
+llama.cpp on ARM, MLX on Apple Silicon, GGUF optimization
+L10
+Voice Pipeline
+ASR (Whisper) → LLM → TTS (Piper), end-to-end on edge
+L11
+Multimodal Inference
+Vision encoders, cross-modal attention, vision-language models, image & video generation pipelines
+L12
+Production Systems
+Cold starts, canary deployments, cache-aware routing. Guardrails & output filtering. Batch vs online inference
+L13
+Structured Output & Evals
+JSON schema, logit biasing, guided decoding. Eval harnesses, benchmarking methodology, latency profiling
+L14
+Fine-Tuning & Distillation for Edge
+LoRA, QLoRA, knowledge distillation, model-to-edge pipeline
