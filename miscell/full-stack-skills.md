@@ -50,7 +50,9 @@ Debugging Javascript applications: https://www.youtube.com/watch?v=z2EsUIJKk6o
 # Backend
 
 Debugging python apps: 
+
 https://www.udemy.com/course/python-debugging-with-visual-studio-code/
+
 Vscode debugger:
 https://www.youtube.com/watch?v=XmpIBsnc3xU 
 
