@@ -53,5 +53,7 @@ Debugging python apps:
 https://www.udemy.com/course/python-debugging-with-visual-studio-code/
 Vscode debugger:
 https://www.youtube.com/watch?v=XmpIBsnc3xU 
+
 https://www.youtube.com/watch?v=x05wM0McDwA
+
 https://www.youtube.com/watch?v=oCcTiRGPogQ
