@@ -98,5 +98,6 @@ Here is the structured breakdown of the transcript, reorganized by core architec
 * **XSS Countermeasures:** Stops malicious script execution in other users' browsers by sanitizing, escaping, and filtering text inputs before writing them to the database or rendering them on the UI.
 
 ---
+https://www.youtube.com/watch?v=adOkTjIIDnk
 
 ### 🛠️ Need a Deep Dive on Specific Architectures?
