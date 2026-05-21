@@ -196,5 +196,7 @@ Here is the structured point-by-point reorganization of the DevOps course transc
 * **Deployment:** The orchestrator execution controller supervising tracking metrics, replication limits, system rollouts, self-healing restorations, and configuration versions for a set of Pods.
 * **Service (Svc):** A stable, persistent external network entry interface point that routes request distributions gracefully to dynamic back-end Pod instances, ensuring that even if underlying pods are destroyed and re-created with new internal IPs, the communication path remains unbroken.
 
+* https://www.youtube.com/watch?v=Tq0vZU7Hp_M&t=3s
+
 
 * **Local Learning Workspaces (`Minikube`):** A simplified single-node deployment layout footprint initializing both management planes and compute profiles safely inside a local workspace engine context. Port proxy commands (`kubectl port-forward`) let you map and test structural platform connections locally.
