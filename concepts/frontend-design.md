@@ -1,0 +1,2 @@
+- **WebSockets:** Allows for continuous, **two-way communication** over a single, persistent connection. This enables real-time applications (live chat, stock dashboards) and eliminates the need for inefficient polling.
+- **WebHooks:** A mechanism for a server (provider) to notify another server (receiver) when an event occurs by sending an HTTP POST request to a pre-registered URL.
