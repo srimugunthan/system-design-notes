@@ -4,6 +4,9 @@
 
 -<img width="1080" height="1350" alt="image" src="goodapis.jp2" />
 
+- **APIs (Application Programming Interfaces):** A middleman that allows clients to communicate with servers, processing requests and returning a structured response (usually JSON or XML).
+- **REST API (Representational State Transfer):** A widely used API style that is stateless, treats everything as a resource (users, orders), and uses standard HTTP methods (`GET`, `POST`, `PUT`, `DELETE`).
+- **GraphQL:** Allows clients to ask for exactly the data they need, nothing more, nothing less, often combining multiple data requests into a single query to solve the data over-fetching problem of REST.
 
 ## API patterns
 ### **API Patterns**
