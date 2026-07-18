@@ -4,6 +4,12 @@
 
 -<img width="1080" height="1350" alt="image" src="goodapis.jp2" />
 
+- **Rate Limiting:** Restricts the number of requests a client can send within a specific time frame to prevent server overload and protect against bots or excessive traffic.
+- **API Gateway:** A centralized service that acts as a single entry point for all client requests, handling common functions like authentication, rate limiting, logging, and routing requests to the correct microservice.
+- **Idempotency:** Ensures that repeated requests produce the same result as if the request was made only once (e.g., preventing a double charge on a payment refresh) by assigning a unique ID to each request.
+
+--
+--
 - **APIs (Application Programming Interfaces):** A middleman that allows clients to communicate with servers, processing requests and returning a structured response (usually JSON or XML).
 - **REST API (Representational State Transfer):** A widely used API style that is stateless, treats everything as a resource (users, orders), and uses standard HTTP methods (`GET`, `POST`, `PUT`, `DELETE`).
 - **GraphQL:** Allows clients to ask for exactly the data they need, nothing more, nothing less, often combining multiple data requests into a single query to solve the data over-fetching problem of REST.
