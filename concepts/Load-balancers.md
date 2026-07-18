@@ -12,3 +12,12 @@ Load balancing distributes user requests across multiple servers to handle scale
     - **Layer 7:** Can inspect deeper information like HTTP headers and URLs. This offers more control but adds additional overhead [03:03:06].
  
 - Load Balancer: Sits between clients and backend servers to distribute requests across multiple servers using algorithms like round-robin or least connections.
+
+- **Load Balancer** [01:17]
+    - A server known as a **reverse proxy** [01:24] that directs incoming requests to the appropriate server.
+    - **Algorithms** used include **Round Robin** (cycling through servers) and **Hashing** (based on the request ID) [01:31].
+    - It can balance traffic or route a request to the nearest geographical location [01:45].
+- **Content Delivery Network (CDN)** [01:51]
+    - A network of servers globally for serving static files (images, videos, HTML, CSS, and JavaScript).
+    - They work by copying files from your server (**origin server**) onto the CDN servers [02:16].
+    - Content Delivery Network (CDN): A global network of distributed servers that deliver web content to users faster by serving it from the server geographically closest to them, which minimizes buffering and load times.
