@@ -1,3 +1,10 @@
+- **Caching** [02:24]
+    - The technique of creating copies of data to be refetched faster.
+    - Caching occurs at multiple levels to avoid expensive operations:
+        - Browser disk cache [02:32]
+        - Computer memory cache [02:40]
+        - CPU cache (L1, L2, L3) [02:47]
+        - 
 ### **1. Caching**
 
 Caching involves storing frequently accessed data closer to the user or application to reduce latency and protect the database from heavy load [00:20].
