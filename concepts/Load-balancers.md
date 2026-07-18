@@ -10,3 +10,5 @@ Load balancing distributes user requests across multiple servers to handle scale
 - **Load Balancer Layers:**
     - **Layer 4:** Looks at network information, such as IP address and port [03:03:04].
     - **Layer 7:** Can inspect deeper information like HTTP headers and URLs. This offers more control but adds additional overhead [03:03:06].
+ 
+- Load Balancer: Sits between clients and backend servers to distribute requests across multiple servers using algorithms like round-robin or least connections.
