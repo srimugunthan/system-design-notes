@@ -1,0 +1,3 @@
+- **Databases:** The backbone for storing and managing data efficiently.
+    - **SQL (Relational):** Stores data in tables with a strict predefined schema, follows ACID properties, and is ideal for strong consistency (e.g., banking systems).
+    - **NoSQL (Non-Relational):** Designed for high scalability and performance, doesn't require a fixed schema, and is optimized for large-scale distributed data.
