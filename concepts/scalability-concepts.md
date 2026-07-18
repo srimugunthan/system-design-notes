@@ -4,6 +4,13 @@
 - **Horizontal Scaling** (Preferred in system design) means adding more servers, like hiring more baristas for a cafe [00:47].
 - **Vertical Scaling** means upgrading the existing server (like buying a bigger coffee machine), which has limits [00:54].
 
+- **Vertical Scaling (Scaling Up)** [00:33]
+    - Involves adding more resources (RAM, CPU) to a single server.
+    - It's easy to do but has very limited potential.
+- **Horizontal Scaling (Scaling Out)** [00:41]
+    - Involves adding replicas/more servers to handle a subset of requests.
+    - It is more powerful, allows near-infinite scaling, adds redundancy, and provides fault tolerance [00:55].
+    - It is a much more complicated approach.
 - 
 ### Challenges of Scaling
 
