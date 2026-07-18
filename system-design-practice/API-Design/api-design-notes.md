@@ -93,4 +93,66 @@
     - Adaptive bit rate streaming (adjusting quality based on internet speed) [09:31].
 - **Benefit:** Eliminates server bottlenecks, leading to faster communication and smoother real-time experiences [09:43].
 
+--
+--
+# API security
 
+This is a summary of the seven proven techniques to protect your APIs, based on the video transcript.
+
+The video is: **"API Security Explained: Rate Limiting, CORS, SQL Injection, CSRF, XSS & More"** by Hayk Simonyan.
+
+### Seven Proven Techniques for API Security
+
+**1. Rate Limiting** [00:13]
+
+- **Function:** Controls the number of requests a client can make within a specified period of time [00:19].
+- **Purpose:** Prevents attackers from overwhelming your system with thousands of requests per minute, which could lead to a system outage or data brute-forcing [00:46].
+- **Implementation Levels:**
+    - **Per Endpoint:** Sets a strict number of requests for specific endpoints, like a `/comments` endpoint [01:00].
+    - **Per User or IP Address:** Blocks requests from a specific user or IP address if they exceed the set limit [01:17].
+    - **Overall Rate Limiting:** Protects against Distributed Denial of Service (DDoS) attacks by temporarily blocking all traffic when the overall incoming request volume surpasses a system-wide limit, even if the traffic comes from many different sources (bots) [01:47].
+
+**2. CORS (Cross-Origin Resource Sharing)** [02:39]
+
+- **Function:** Controls which domain can successfully call your API from a web browser [02:42].
+- **Risk:** Without proper CORS configuration, a malicious website could trick a user's browser into making unauthorized requests to your API on their behalf [02:46].
+- **Solution:** Only allow requests from your verified source (e.g., `app.yourdomain.com`) and block all requests originating from other unknown domains [03:07].
+
+**3. SQL and NoSQL Injections** [04:05]
+
+- **Mechanism:** Attackers include malicious code in user input that is then directly executed as part of the database query [04:12].
+- **Attack Goal:** To read, modify, or delete data, including all user data and tables, from your database [04:19].
+- **Fix:** Prevent injection attacks by always using **parameterized queries** or **ORM (Object-Relational Mapping) safeguards** [04:39].
+
+**4. Firewalls** [04:44]
+
+- **Role:** Acts as a gatekeeper, filtering out malicious traffic before it reaches your API [04:48].
+- **Functionality:** Can block requests that show unknown attack patterns, such as suspicious SQL keywords or strange HTTP methods [05:04].
+
+**5. VPNs (Virtual Private Networks)** [05:22]
+
+- **Purpose:** To make certain APIs private so they can only be accessed from specific, internal networks [05:22].
+- **Access:** An API within the VPN network can only be reached by a user who is also connected to that same network [05:31].
+- **Use Case:** Ideal for internal tools, such as an administration dashboard whose API should only be reachable by employees connected to the company VPN [06:12].
+
+**6. CSRF (Cross-Site Request Forgery)** [06:23]
+
+- **Mechanism:** Tricks a logged-in user's browser into making an unwanted request to the API without their knowledge [06:27].
+- **Risk:** If a system relies only on session cookies for authentication, a malicious site could use that cookie to submit a hidden, unauthorized request (e.g., transferring money from a bank account) [06:33].
+- **Prevention:** Use **CSRF tokens** in conjunction with session cookies. The system verifies both the session cookie and the CSRF token, blocking the request if the token does not match [06:54].
+
+**7. XSS (Cross-Site Scripting)** [07:16]
+
+- **Mechanism:** Allows attackers to inject malicious scripts into web pages that are then served to other users [07:18].
+- **Attack Flow:** An attacker submits a comment containing a malicious script (e.g., to fetch another user's cookie) [07:47]. The API stores this script in the database. When other users load the comment section, their browser executes the malicious JavaScript code [08:12].
+
+---
+
+**Video Details:**
+
+- **Channel:** Hayk Simonyan
+- **Link:** API Security Explained: Rate Limiting, CORS, SQL Injection, CSRF, XSS & More
+
+=========
+
+###
