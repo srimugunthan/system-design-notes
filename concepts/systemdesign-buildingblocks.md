@@ -10,6 +10,9 @@ A typical scalable system logically includes:
 - **Database Layer:** Where all the data lives [01:43].
 - **Message Queues:** To handle asynchronous jobs and traffic spikes [01:46].
 - **Monitoring and Logging:** Essential because "what you can't measure you can't scale" [01:49].
+- ### 
+
+- **Blob Storage (Binary Large Object):** Cloud storage (like Amazon S3) used to store large, unstructured files (images, videos, PDFs) that traditional databases cannot handle efficiently.
 
 
 ### 3. Core Components in Detail
