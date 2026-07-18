@@ -4,4 +4,4 @@
 
 
 
-![Description of image](./goodapis.jp2)
+![](./goodapis.jp2)
