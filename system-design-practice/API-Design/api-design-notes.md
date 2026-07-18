@@ -5,12 +5,25 @@
 -<img width="1080" height="1350" alt="image" src="goodapis.jp2" />
 
 
+## API patterns
+### **API Patterns**
 
+- **REST (Representational State Transfer)** [05:42]
+    - A standardization around HTTP APIs, making them **stateless** and following consistent guidelines.
+    - Successful requests return a **200-level code**; client errors return **400-level codes**; server issues return **500-level codes** [05:50].
+- **GraphQL** [06:06]
+    - Allows a client to make a single **query** and choose **exactly which resources** to fetch [06:21], preventing over-fetching of unnecessary data.
+- **gRPC** [06:34]
+    - An RPC (Remote Procedure Call) framework mainly used for **server-to-server communication**.
+    - It uses **Protocol Buffers** [06:59] for faster performance, which serializes data into a binary format that is more storage-efficient than JSON.
+- **Websockets** [07:21]
+    - An application-layer protocol that supports **bi-directional communication** [07:41].
+    - It is used to **immediately push** new data (e.g., chat messages) to a device, avoiding the need for constant **polling** [07:35].
 
 ### Every Type Of API You Must Know Explained!
 
 **(Source: http://www.youtube.com/watch?v=pBASqUbZgkY by Codist )**
-(Source: http://www.youtube.com/watch?v=pBASqUbZgkY by Codist )
+
 ---
 
 ### 1. REST API (Representational State Transfer)
