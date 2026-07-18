@@ -10,7 +10,7 @@
 ### Every Type Of API You Must Know Explained!
 
 **(Source: http://www.youtube.com/watch?v=pBASqUbZgkY by Codist )**
-
+(Source: http://www.youtube.com/watch?v=pBASqUbZgkY by Codist )
 ---
 
 ### 1. REST API (Representational State Transfer)
@@ -33,7 +33,9 @@
 -<img width="1080" height="1350" alt="image" src="https://github.com/user-attachments/assets/f0ed2434-d34d-40dc-a918-af0057d39c9b" />
 
 
-    ### SOAP API (Simple Object Access Protocol)
+
+
+### 2. SOAP API (Simple Object Access Protocol)
 
 - **Definition:** One of the oldest and most formal ways that systems communicate [01:35].
 - **Analogy:** If REST is a casual phone call, SOAP is a formal business contract [01:41].
@@ -92,5 +94,3 @@
 - **Benefit:** Eliminates server bottlenecks, leading to faster communication and smoother real-time experiences [09:43].
 
 
-
-### 2. SOAP API (Simple Object Access Protocol)
