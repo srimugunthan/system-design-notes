@@ -29,6 +29,10 @@
     !image.png
 
 
+
+-<img width="1080" height="1350" alt="image" src="https://github.com/user-attachments/assets/f0ed2434-d34d-40dc-a918-af0057d39c9b" />
+
+
     ### SOAP API (Simple Object Access Protocol)
 
 - **Definition:** One of the oldest and most formal ways that systems communicate [01:35].
@@ -88,7 +92,5 @@
 - **Benefit:** Eliminates server bottlenecks, leading to faster communication and smoother real-time experiences [09:43].
 
 
-
--<img width="1080" height="1350" alt="image" src="https://github.com/user-attachments/assets/f0ed2434-d34d-40dc-a918-af0057d39c9b" />
 
 ### 2. SOAP API (Simple Object Access Protocol)
