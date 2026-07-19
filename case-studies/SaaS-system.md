@@ -1,4 +1,5 @@
 This is a summary of the YouTube video "How I Coded a SaaS (payments, database and frontend)" by NeetCode, reorganized into key points from the transcript.
+https://www.youtube.com/watch?v=4G5t1HwHQD4
 
 The video details the architectural decisions, technologies used, and challenges encountered while building a Software as a Service (SaaS) platform, NeetCode Pro.
 
