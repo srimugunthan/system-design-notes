@@ -34,3 +34,40 @@ While Netflix uses JavaScript for UIs and Python for Machine Learning [[10:43](h
 
 
 http://googleusercontent.com/youtube_content/1
+
+
+<img width="712" height="1186" alt="image" src="https://github.com/user-attachments/assets/725880ef-f462-4236-b471-3e01c645317a" />
+
+
+### Client & Development Technologies
+
+- **Mobile:** Swift and Kotlin are used as the building blocks.
+- **Web:** React powers the web experience.
+- **Development Tools:** Jira, Jenkins, and Spica streamline workflows.
+
+---
+
+### Communication Protocols
+
+- **Client-Server Interaction:** REST and GraphQL handle communication.
+- **Microservices:** gRPC powers communication between microservices.
+- **Real-time Connections:** WebSocket facilitates real-time communication.
+
+---
+
+### Data, Storage, and Video Distribution
+
+- **Data Storage:** Cassandra and S3 are used to keep data safe.
+- **Big Data Streaming:** Kafka and Flink manage the streaming of big data.
+- **Video Distribution:** S3 and Netflix's own **Open Connect** ensure videos are efficiently distributed.
+
+---
+
+### Infrastructure & Operations
+
+- **Deployment and Scaling:** Netflix's own **Titus** simplifies deployment and scaling.
+- **Monitoring:** Atlas is used for system monitoring.
+- **Service Discovery:** Eureka is used for service discovery.
+- **System Resilience:** **Chaos Monkey** deliberately causes problems to test system resilience, highlighting Netflix's dedication to reliability.
+
+The video can be found here: https://www.youtube.com/shorts/S4tLX3kq4Ik
