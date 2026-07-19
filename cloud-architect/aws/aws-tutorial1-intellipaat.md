@@ -1,4 +1,4 @@
-Here is a summary of the AWS Full Course video, broken down into 15-minute chronological chunks:
+Here is a summary of the AWS Full Course video, https://www.youtube.com/watch?v=N3QYOjSXxiU  broken down into 15-minute chronological chunks:
 
 ### [[00:00](https://www.youtube.com/watch?v=N3QYOjSXxiU&t=0)] - [[15:00](https://www.youtube.com/watch?v=N3QYOjSXxiU&t=900)] Course Overview & The 7-Step AWS Road Map
 
