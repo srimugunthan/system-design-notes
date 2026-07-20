@@ -39,15 +39,16 @@ https://docs.google.com/document/d/1r_oo33cuRSAgX9igHKZUMEMPWZPXA2uP82he3skBv7Q/
 
 # system design playlist:
 
-System design play list: https://www.youtube.com/watch?v=0e7yQ43bUtg&list=PL_c9BZzLwBRLSs6x50D5WIH76VCUxJs9E
+System design play list(
+Caleb Curry): https://www.youtube.com/watch?v=0e7yQ43bUtg&list=PL_c9BZzLwBRLSs6x50D5WIH76VCUxJs9E
 
-System design play list:  https://www.youtube.com/playlist?list=PLsdq-3Z1EPT27BuTnJ_trF7BsaTpYLqst
+System design play list (by Arpit Bhayani) : https://www.youtube.com/playlist?list=PLsdq-3Z1EPT27BuTnJ_trF7BsaTpYLqst
 
 Neetcode: https://www.youtube.com/playlist?list=PLot-Xpze53le35rQuIbRET3YwEtrcJfdt
 
 Neetcode:  https://neetcode.io/courses/system-design-interview/0
 
-https://www.youtube.com/watch?v=RAuIWs3ne9g&list=PLA12lriZjwUO6AGEZK1JhyVWaWnG7dDEK&index=1
+FAANG senior engineer: https://www.youtube.com/watch?v=RAuIWs3ne9g&list=PLA12lriZjwUO6AGEZK1JhyVWaWnG7dDEK&index=1
 
 https://www.youtube.com/watch?v=Nx_heeRZXKs&list=PLA12lriZjwUOpC98pndP6O86TzSe1AqNK
 
