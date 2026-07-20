@@ -23,6 +23,8 @@ https://docs.google.com/document/d/1r_oo33cuRSAgX9igHKZUMEMPWZPXA2uP82he3skBv7Q/
 
 - https://medium.com/javarevisited/i-tried-30-system-design-courses-here-are-my-top-5-recommendations-for-2025-3c4971206a39
 - https://www.systemdesignhandbook.com/
+
+- Github crash course: https://github.com/mayankjoshii/System-Design-Crash-Course
 - 
 
 ## supplemental resources
