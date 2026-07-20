@@ -36,6 +36,29 @@ https://docs.google.com/document/d/1r_oo33cuRSAgX9igHKZUMEMPWZPXA2uP82he3skBv7Q/
 - Developer to archiitect: https://www.udemy.com/course/developer-to-architect/
 
 ## Youtube videos:
+
+# system design playlist:
+
+System design play list: https://www.youtube.com/watch?v=0e7yQ43bUtg&list=PL_c9BZzLwBRLSs6x50D5WIH76VCUxJs9E
+
+System design play list:  https://www.youtube.com/playlist?list=PLsdq-3Z1EPT27BuTnJ_trF7BsaTpYLqst
+
+Neetcode: https://www.youtube.com/playlist?list=PLot-Xpze53le35rQuIbRET3YwEtrcJfdt
+
+Neetcode:  https://neetcode.io/courses/system-design-interview/0
+
+https://www.youtube.com/watch?v=RAuIWs3ne9g&list=PLA12lriZjwUO6AGEZK1JhyVWaWnG7dDEK&index=1
+
+https://www.youtube.com/watch?v=Nx_heeRZXKs&list=PLA12lriZjwUOpC98pndP6O86TzSe1AqNK
+
+https://expertifie.com/courses/system-design/ 
+
+designing data intensive app:
+
+https://www.youtube.com/playlist?list=PLhgFs9q2EVg_rB-XT1zaJ3k9z0KVGrR2h 
+
+#
+
 - 5 hour video https://www.youtube.com/watch?v=Vnm-ycSfJx4
 - 2 hour video "System Design Course – APIs, Databases, Caching, CDNs, Load Balancing & Production Infra"  https://www.youtube.com/watch?v=C842vFY5kRo
 
