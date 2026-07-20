@@ -13,6 +13,11 @@ Syllabus
 9) Scalablity
 10) Performance optimization 
 
+## My notes in gdrive
+https://docs.google.com/document/d/1FyEukTOmGcYwslHQJoKL0m8oKI-IelzTopXpA3oPdfU/edit?tab=t.0 
+
+AWS architect
+https://docs.google.com/document/d/1r_oo33cuRSAgX9igHKZUMEMPWZPXA2uP82he3skBv7Q/edit?tab=t.0 
 
 ## Main resources
 
