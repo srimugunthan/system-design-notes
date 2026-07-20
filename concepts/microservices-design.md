@@ -1,9 +1,10 @@
 # Microservices design
 
-- **Monolithic Architecture vs. Microservices:**
+- **Monolithic Architecture vs. Microservices:** 
     - **Monolith:** One large codebase that becomes hard to manage and scale for large systems.
     - **Microservices:** Application broken down into smaller, independent services, each with its own database and logic, allowing them to scale and deploy independently.
 
+Video: https://www.youtube.com/watch?v=LIgKa1X7FbE 
 
 # Section 1: Microservices Mental Model
 
