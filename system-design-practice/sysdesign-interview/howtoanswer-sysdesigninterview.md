@@ -81,3 +81,111 @@ The goal is to conclude the discussion smoothly and professionally.
 - **Leave enough room** at the end of the interview for the interviewer to ask questions about the company or role [09:26].
 
 #
+******
+# System Design Interview: The 45-Minute Blueprint
+
+*A structured breakdown of the video "[How to Pass a System Design Interview (The 45-Minute Blueprint)](https://www.youtube.com/watch?v=HcC9Du6RWwk)" by Code with Lucian*
+
+---
+
+## 🎯 Key Mindset & Overview `[00:00:00]`
+
+- **The Sifter Round:** While HR passes ~75% and coding rounds pass ~20%, system design cuts the remaining pool in half—making it the primary differentiator for senior placement and salary compensation.
+
+- **Signal over Noise:** Interviewers evaluate how you handle ambiguity, justify trade-offs, structure thoughts, and handle system stress—not how many buzzwords you throw around.
+
+- **Drive the Conversation:** Successful candidates take control immediately and proactively lead the discussion rather than waiting passively for questions.
+
+---
+
+## Phase 1: Minutes 0–5 — Scope & Requirement Boundaries `[00:01:05]`
+
+### Avoid the Scope Trap
+Don't start drawing database schemas immediately when given a vague prompt (e.g., "Design Uber").
+
+### Functional Requirements (Keep it Tight)
+Pick max 3 core features for the initial design (e.g., rider requests ride, driver accepts, real-time location tracking).
+
+### Non-Functional Requirements & SLAs
+- Clarify consistency expectations (e.g., strong consistency for payments vs. eventual consistency for driver locations)
+- Establish latency budgets (e.g., location tracking latency < 500 ms)
+- Define access patterns like the read-to-write ratio (e.g., 100:1 read-heavy vs. 99% write-heavy IoT logging)
+
+### Avoid Premature Overengineering
+Don't propose multi-region database sharding before establishing scale.
+
+---
+
+## Phase 2: Minutes 5–10 — Estimations, API Contracts & Storage `[00:03:10]`
+
+### Order of Magnitude Estimations
+- Interviewers test architectural justification, not exact arithmetic—round numbers aggressively
+- **Example:** 10M daily users doing 10 actions/day = 100M events. Dividing by 100,000 seconds/day yields an average of 1,000 QPS (peak ≈ 2,000 QPS)
+- **Network Bandwidth Check:** 2,000 QPS × 10 KB payload = 20 MB/s, which fits on a single instance without immediate partitioning needs
+
+### API Contracts & Protocols
+- Use **REST over HTTPS** for stateless transactional operations (e.g., ride booking)
+- Use **WebSockets or Server-Sent Events (SSE)** for real-time bidirectional location streaming to minimize HTTP polling overhead
+
+### Primary Data Storage
+- **Relational (e.g., PostgreSQL):** For ACID compliance and transactional integrity (e.g., payments)
+- **NoSQL / In-Memory (e.g., Redis, Cassandra):** For ultra-low latency, key-value lookups, or geospatial indexing (e.g., driver coordinates)
+
+---
+
+## Phase 3: Minutes 10–20 — High-Level Architecture `[00:05:29]`
+
+### Start Minimal
+Design day 1 before day 1000. Begin with a simple 5-box foundation:
+
+```
+Client → Load Balancer → API Gateway → Application Services → Database
+```
+
+### Trace the Happy Path
+Walk the interviewer step-by-step through a single end-to-end request.
+
+### Explain Component Purpose Out Loud
+Never add a component without stating its exact purpose (e.g., "Adding a Load Balancer here to distribute peak 2,000 QPS traffic across stateless app servers and run health checks").
+
+### Separate Read & Write Paths
+Direct high-volume reads (e.g., map views) away from primary transactional databases toward read replicas or in-memory caches.
+
+---
+
+## Phase 4: Minutes 20–35 — Deep Dives, Bottlenecks & Hard Trade-Offs `[00:07:15]`
+
+### Caching Strategies
+- Implement **Cache-Aside** with Redis for read bottlenecks
+- Manage memory using TTLs and **LRU (Least Recently Used)** eviction policies
+
+### Database Scaling & Sharding
+- Scale reads with **Asynchronous Read Replicas**
+- Scale writes with **Horizontal Sharding**
+- **Sharding Key Warning:** Avoid hot spots (e.g., sharding by `City_ID` breaks during New Year's Eve in NYC). Use composite keys like `City_ID + Hash(Driver_ID)`
+
+### Asynchronous Decoupling
+Use distributed message queues (e.g., Kafka) to handle write surges (e.g., driver location updates) and provide backpressure protection.
+
+### CAP Theorem Trade-Offs
+- **Location Tracking:** Prioritize **Availability (AP)** with eventual consistency (a 2-second location delay is acceptable)
+- **Payment Transactions:** Prioritize **Consistency (CP)** (safely fail a transaction rather than double-charge)
+
+### Single Points of Failure (SPOF)
+Introduce multi-region automated failovers with health-check heartbeats and warm standby replicas.
+
+---
+
+## Phase 5: Minutes 35–45 — Resilience, Observability & Wrap-Up `[00:11:05]`
+
+- **Distributed Tracing:** Inject a unique Trace ID at the API Gateway to track requests across microservices
+- **Circuit Breakers:** Prevent cascading failures when downstream external dependencies fail or slow down
+- **System Metrics:** Unmonitored systems are broken systems waiting to happen
+
+---
+
+## 🚨 3 Critical Red Flags That Lead to Rejection `[00:11:38]`
+
+1. **Overengineering too early:** Adding complex distributed patterns before establishing baseline constraints
+2. **Getting defensive:** Treating bottleneck questions as attacks rather than opportunities to discuss architectural trade-offs
+3. **Poor time management:** Spending 25 minutes on math calculations and running out of time to build the actual architecture diagram
