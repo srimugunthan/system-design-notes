@@ -75,3 +75,8 @@ https://www.youtube.com/playlist?list=PLhgFs9q2EVg_rB-XT1zaJ3k9z0KVGrR2h
 - https://www.udemy.com/course/software-architecture-design-of-modern-large-scale-systems
 - https://www.udemy.com/course/system-design-interview-prep
 - 
+Top 10 Udemy courses:
+https://medium.com/javarevisited/top-10-udemy-courses-to-learn-system-design-and-software-architecture-in-2025-61b0f84aa310 
+My Favorite Udemy Courses to Learn System Design in Depth
+https://medium.com/javarevisited/my-favorite-udemy-courses-to-learn-system-design-in-2023-b64b5c403cea 
+
