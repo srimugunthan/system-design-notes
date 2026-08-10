@@ -1,4 +1,4 @@
-# System Design: Shield-Fin Narrative Triage
+
 ## LLM-Based Classification of Transaction Narratives & Adverse Media for AML/Fraud Triage
 
 **Status:** Draft v1
