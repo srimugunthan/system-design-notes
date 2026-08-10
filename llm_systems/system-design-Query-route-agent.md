@@ -961,3 +961,308 @@ Semantic caching (using embedding similarity for LLM responses) reduces LLM call
 ---
 
 *Design version 1.0 — March 2026*
+
+---
+--
+--
+# System Design: Enterprise Analytics Assistant (LangGraph Multi-Agent)
+
+**Status:** Draft v1
+**Owner:** Data Science / AI Platform
+**Scope:** Query routing across RAG, tool execution (SQL/API), and direct LLM response, with verification/correction loops, observability, and production scalability.
+
+---
+
+## 1. Problem Statement & Goals
+
+**You are designing a production-grade multi-agent system using LangGraph for an enterprise
+analytics assistant.
+The system should:
+Handle user queries
+Decide whether to use RAG, tool execution (SQL / APIs), or direct LLM response
+Support verification and correction loops
+Be observable and scalable in production**
+
+Build a multi-agent orchestration layer that lets enterprise users ask natural-language analytics questions and get correct, grounded, auditable answers, regardless of whether the answer requires:
+
+- Retrieval from internal knowledge bases (policy docs, runbooks, metric definitions)
+- Structured data access (SQL over a warehouse, internal APIs)
+- Pure reasoning/summarization from the LLM itself
+
+### Non-negotiable requirements
+
+| Requirement | Detail |
+|---|---|
+| Correctness | Answers must be verified/grounded before returning to the user |
+| Auditability | Every decision (route chosen, SQL run, sources cited) must be traceable |
+| Latency | P50 < 4s for direct/RAG paths, P50 < 8s for SQL/tool paths |
+| Scalability | Support concurrent multi-tenant load, horizontally scalable workers |
+| Safety | No unguarded SQL execution, no PII leakage, no hallucinated citations |
+| Extensibility | New tools/data sources addable without redesigning the graph |
+
+---
+
+## 2. High-Level Architecture
+
+```
+                                 ┌─────────────────────────┐
+                                 │      API Gateway /       │
+                                 │   Auth (OIDC/mTLS)       │
+                                 └────────────┬─────────────┘
+                                              │
+                                 ┌────────────▼─────────────┐
+                                 │   Orchestration Service   │
+                                 │  (FastAPI + LangGraph     │
+                                 │   Runtime, stateless)     │
+                                 └────────────┬─────────────┘
+                                              │
+                    ┌─────────────────────────┼─────────────────────────┐
+                    │                         │                         │
+             ┌──────▼──────┐          ┌───────▼───────┐         ┌───────▼───────┐
+             │  Checkpoint  │          │   LangGraph    │         │   Trace/Log   │
+             │  Store       │◄────────►│   Graph Exec   │────────►│   Sink        │
+             │ (Postgres/   │          │   (per-thread) │         │ (OTel + LLM   │
+             │  Redis)      │          └───────┬───────┘         │  observability)│
+             └──────────────┘                  │                 └───────────────┘
+                                                │
+              ┌────────────────┬────────────────┼────────────────┬────────────────┐
+              │                │                │                │                │
+       ┌──────▼─────┐   ┌──────▼─────┐   ┌──────▼─────┐   ┌──────▼─────┐   ┌──────▼─────┐
+       │  Router /  │   │    RAG     │   │    Tool     │   │  Direct     │   │ Verifier / │
+       │  Planner   │   │   Node     │   │  Execution  │   │  LLM Node   │   │ Corrector  │
+       │   Node     │   │            │   │    Node     │   │             │   │   Node     │
+       └────────────┘   └─────┬──────┘   └─────┬──────┘   └─────────────┘   └─────┬──────┘
+                               │                │                                  │
+                        ┌──────▼──────┐  ┌──────▼───────┐                  ┌───────▼───────┐
+                        │ Vector Store │  │ SQL Engine /  │                  │ Response      │
+                        │ (pgvector /  │  │ Warehouse +   │                  │ Synthesizer   │
+                        │  OpenSearch) │  │ API Gateway   │                  │ Node          │
+                        └──────────────┘  └───────────────┘                  └───────────────┘
+```
+
+---
+
+## 3. LangGraph State Design
+
+LangGraph models the whole interaction as a typed state object that flows through nodes. Keep it flat, serializable, and checkpoint-friendly.
+
+```python
+from typing import TypedDict, Literal, Optional
+from langgraph.graph import add_messages
+from typing_extensions import Annotated
+
+class AgentState(TypedDict):
+    messages: Annotated[list, add_messages]      # conversation history
+    user_query: str
+    route: Optional[Literal["rag", "sql", "api", "direct", "clarify"]]
+    route_confidence: float
+    retrieved_context: Optional[list[dict]]       # docs + metadata + scores
+    tool_calls: Optional[list[dict]]               # SQL/API calls made, params, results
+    draft_answer: Optional[str]
+    verification: Optional[dict]                   # {"grounded": bool, "issues": [...], "score": float}
+    correction_attempts: int
+    final_answer: Optional[str]
+    citations: Optional[list[dict]]
+    trace_id: str
+    tenant_id: str
+    user_id: str
+    audit_log: list[dict]
+```
+
+Design choices:
+
+- **`audit_log`** is appended to (never overwritten) at every node — this is what feeds the compliance/audit trail, independent of the tracing backend.
+- **`correction_attempts`** is a bounded counter used for loop control (see §6).
+- State is kept small and JSON-serializable so it can be checkpointed cheaply and inspected by humans during incident review.
+
+---
+
+## 4. Graph Topology
+
+```
+        ┌───────────┐
+        │  START    │
+        └─────┬─────┘
+              │
+        ┌─────▼──────┐
+        │  Router /  │──── low confidence ───►┌────────────┐
+        │  Planner   │                        │  Clarify   │──► END (ask user)
+        └─────┬──────┘                        └────────────┘
+              │
+   ┌──────────┼───────────┬────────────┐
+   │          │           │            │
+┌──▼───┐  ┌───▼───┐  ┌────▼────┐  ┌────▼────┐
+│ RAG  │  │  SQL   │  │  API    │  │ Direct  │
+│ Node │  │ Node   │  │  Node   │  │  LLM    │
+└──┬───┘  └───┬────┘  └────┬────┘  └────┬────┘
+   │          │            │            │
+   └──────────┴─────┬──────┴────────────┘
+                     │
+              ┌──────▼───────┐
+              │  Verifier /   │
+              │  Grounding    │
+              │  Check Node   │
+              └──────┬───────┘
+                      │
+          ┌───────────┴────────────┐
+     fail │                        │ pass
+          ▼                        ▼
+   ┌──────────────┐        ┌───────────────┐
+   │  Corrector /  │        │   Response     │
+   │  Re-planner   │        │   Synthesizer  │
+   │  (loops back  │        └───────┬───────┘
+   │  to Router)   │                │
+   └──────┬────────┘                ▼
+          │                       END
+   attempts < N ──► Router
+   attempts >= N ──► "answer with caveats" ──► END
+```
+
+### 4.1 Router / Planner Node
+
+- Classifies intent using a small, fast model (or a fine-tuned classifier) plus rule-based overrides (e.g., regex for "as of <date>", "compare", "trend" → likely SQL; "policy", "how do I", "what does X mean" → likely RAG).
+- Outputs `route` + `route_confidence`. Below a confidence threshold, route to `clarify` instead of guessing — this is cheaper than a wrong tool call and reduces downstream correction-loop load.
+- Also responsible for **decomposition**: a query needing both RAG (definition of a metric) and SQL (its value) is split into subtasks and routed as a short plan, not forced into one branch. This can be implemented as a `Send()`-based fan-out in LangGraph to run RAG and SQL nodes in parallel, then merge in the synthesizer.
+
+### 4.2 RAG Node
+
+- Hybrid retrieval (dense + keyword/BM25) over the vector store, with metadata filters for tenant isolation.
+- Reranking pass (cross-encoder or LLM-based) before context is passed downstream.
+- Every retrieved chunk carries `{doc_id, source, score, chunk_text}` — this becomes the citation list, not a post-hoc guess.
+
+### 4.3 Tool Execution Node (SQL / API)
+
+This is the highest-risk node and gets the most guardrails:
+
+- **NL→SQL**: LLM generates SQL against a curated schema/semantic layer (not the raw production schema) — reduces hallucinated joins and exposes only sanctioned tables/views.
+- **Static validation before execution**: parse the SQL (e.g., via `sqlglot`), reject anything outside an allowlist of statement types (`SELECT` only), enforce row limits, enforce mandatory `WHERE` filters for tenant/PII scoping.
+- **Execution** happens through a policy-gated data-access service, not directly against the warehouse from the agent process — this is the enforcement point for row/column-level security.
+- **API tools**: registered via a typed tool registry (name, JSON schema for args, auth scope, timeout, retry policy). The LLM only ever sees the schema, never raw credentials.
+- Results (SQL rows, API payloads) are summarized/truncated before being placed back into state to control token growth.
+
+### 4.4 Direct LLM Node
+
+- For queries that need no external grounding (rephrasing, summarizing something already in the conversation, general reasoning). Still passes through the verifier — direct answers are exactly where a model is most tempted to state things confidently and wrongly.
+
+### 4.5 Verifier / Grounding Check Node
+
+- Checks the draft answer against the actual evidence in state (`retrieved_context` and/or `tool_calls` results), not against the model's own confidence:
+  - **Groundedness**: every factual claim traceable to a retrieved chunk or tool result (NLI-style entailment check or an LLM-as-judge prompt constrained to compare claim vs. source).
+  - **Numeric consistency**: for SQL-derived answers, re-derive key numbers programmatically and diff against what the draft states, rather than trusting the LLM's arithmetic.
+  - **Policy/PII check**: no leakage of restricted fields.
+- Emits a structured `verification` object with a pass/fail and a list of specific issues (not just a score) — this is what the corrector needs to act on.
+
+### 4.6 Corrector / Re-planner Node
+
+- On failure, decides *why* it failed and routes accordingly:
+  - Missing/insufficient evidence → back to Router with a refined sub-query (e.g., expand retrieval, adjust SQL filter).
+  - Wrong route chosen → re-route entirely (e.g., RAG was tried but the question actually needed SQL).
+  - Tool error (timeout, bad SQL) → regenerate the tool call with the error message included as context.
+- Bounded by `correction_attempts` (recommend max 2–3). On exhaustion, the response synthesizer returns a best-effort answer **with explicit caveats and reduced confidence**, never a silently degraded "confident" answer.
+
+### 4.7 Response Synthesizer Node
+
+- Merges parallel branches (if decomposition occurred), attaches citations, formats the final answer, and writes the final audit record.
+
+---
+
+## 5. Cyclic Control Flow (Why LangGraph, Specifically)
+
+LangGraph is the right fit here (over a plain DAG orchestrator) because:
+
+- The **verify → correct → re-route** loop is inherently cyclic, not a linear DAG — LangGraph's conditional edges handle this natively.
+- **Checkpointing** (`Checkpointer` / `Postgres`/`Redis` backends) gives durable, resumable execution per `thread_id` — critical for long-running tool calls and for human-in-the-loop interrupts.
+- **`interrupt()`** support enables human approval gates (e.g., "this SQL will scan 200M rows, approve?" or a low-confidence answer routed to a human reviewer) without re-architecting the graph.
+- Native support for parallel fan-out/fan-in (`Send`) covers the decomposition case in §4.1 cleanly.
+
+---
+
+## 6. Loop & Cost Control
+
+Uncontrolled agent loops are the single biggest production risk. Controls:
+
+| Control | Mechanism |
+|---|---|
+| Max correction attempts | Hard cap in state (`correction_attempts`), enforced in the conditional edge, not just prompted |
+| Max total node visits | Global step counter in state; graph aborts to a safe fallback past a ceiling |
+| Per-node timeouts | Wrapped at the node level; tool nodes additionally have per-call timeouts |
+| Token/cost budget per request | Running token counter in state; router uses cheaper model, deep reasoning reserved for verifier/corrector |
+| Circuit breaker on tool/data source | If a downstream API/warehouse is failing repeatedly, short-circuit to "service degraded" response instead of retrying into the wall |
+
+---
+
+## 7. Observability
+
+Three layers, all keyed by a single `trace_id` propagated through state:
+
+1. **Execution tracing** — LangSmith (or OpenTelemetry + a compatible backend) instrumented at every node boundary: inputs, outputs, latency, token usage, model/version used. This is what lets an engineer replay exactly what happened for a given `trace_id`.
+2. **Business/audit logging** — the `audit_log` field in state, persisted to an append-only store (e.g., a dedicated Postgres table or object storage), capturing: route chosen and why, SQL executed (verbatim) and against which dataset, sources cited, verification outcome, correction attempts, final answer. This is the artifact that satisfies compliance/audit requirements independent of any third-party tracing vendor.
+3. **Metrics** — exported via Prometheus/OTel metrics:
+   - Route distribution (RAG vs SQL vs API vs direct vs clarify)
+   - Verification pass rate on first attempt vs after correction
+   - Correction-loop trigger rate and average attempts
+   - P50/P95/P99 latency per node and end-to-end
+   - Tool error rate, SQL rejection rate (by the static validator)
+   - Token cost per request, per route
+
+Alerting thresholds should be set on: verification failure rate spike, correction-loop exhaustion rate, tool error rate, and latency P95 breaches — these are the leading indicators of a degrading system, well before users complain.
+
+---
+
+## 8. Scalability & Deployment
+
+- **Stateless orchestration workers**: the FastAPI/LangGraph process itself holds no session state; all state lives in the checkpoint store, so workers scale horizontally behind a load balancer with no sticky sessions required.
+- **Checkpoint store**: Postgres (durable, queryable for audit) or Redis (lower latency) depending on retention needs — Postgres is the safer default for an enterprise/regulated context since it doubles as an audit source.
+- **Async execution for long tool calls**: SQL/API nodes should be async; for genuinely long-running queries, use LangGraph's interrupt/resume so the HTTP layer isn't held open — poll or push (webhook/SSE) for completion instead.
+- **Model tiering**: cheap/fast model for routing and simple direct answers; stronger model reserved for SQL generation, verification, and correction — this is where most of the cost and latency budget should go, not on classification.
+- **Caching**:
+  - Semantic cache on RAG queries (embedding similarity) to avoid redundant retrieval.
+  - Result cache on SQL node keyed by normalized query + filters, with a short TTL appropriate to data freshness requirements.
+- **Multi-tenancy**: `tenant_id` threaded through state and enforced at the data-access layer (row-level security in the warehouse, filtered vector namespaces), not just trusted from the prompt.
+- **Horizontal scale-out**: run the orchestration service as a Kubernetes deployment with HPA on queue depth/CPU; tool-execution and RAG retrieval can be separate services scaled independently from the orchestration layer if load profiles diverge.
+
+---
+
+## 9. Security & Governance
+
+- **AuthN/AuthZ** at the API gateway (OIDC), with per-tenant/per-role scopes passed into state and enforced again at the data-access layer (defense in depth — never trust the LLM's tool call as the authorization boundary).
+- **No direct DB credentials in the agent process** — all SQL execution proxied through a policy-gated data service.
+- **PII handling**: redaction/masking at retrieval and at tool-result ingestion, before those results ever reach an LLM context window.
+- **Prompt-injection containment**: retrieved documents and tool outputs are treated as data, never as instructions — enforce this with a system prompt that explicitly demotes retrieved/tool content to "untrusted context," plus a lightweight injection classifier on retrieved content for high-sensitivity corpora.
+- **Full replayability**: given a `trace_id`, an auditor should be able to reconstruct the entire decision path — route, evidence, SQL text, verification outcome — without needing the original LLM to "explain itself" after the fact.
+
+---
+
+## 10. Failure Modes & Fallbacks
+
+| Failure | Fallback |
+|---|---|
+| Vector store unavailable | Route to SQL/API if plausible, else direct LLM with explicit "no internal sources available" caveat |
+| Warehouse/API timeout | Retry with backoff (bounded), then circuit-break to a cached/last-known-good result if available, else fail gracefully with explanation |
+| Verifier itself errors | Fail closed — return answer with an "unverified" flag rather than blocking indefinitely |
+| Correction loop exhausted | Return best-effort answer with explicit confidence caveat and offer human escalation |
+| Router misclassifies repeatedly (seen via metrics) | Feed logged misroutes back into router fine-tuning/prompt refinement — this is a continuous-improvement loop, not a one-time launch task |
+
+---
+
+## 11. Suggested Tech Stack
+
+| Layer | Choice |
+|---|---|
+| Orchestration | LangGraph (Python), FastAPI service wrapper |
+| Checkpointing | Postgres (`PostgresSaver`) |
+| Vector store | pgvector or OpenSearch (reuse existing enterprise search infra if present) |
+| SQL semantic layer | dbt/LookML-style curated views, not raw prod schema |
+| Tracing | LangSmith or OpenTelemetry → Grafana/Jaeger |
+| Metrics | Prometheus + Grafana |
+| Audit store | Append-only Postgres table / object storage with WORM policy |
+| Deployment | Kubernetes, HPA on queue depth |
+| Model routing | Small model for classification/routing, larger model for generation/verification |
+
+---
+
+## 12. Open Design Questions
+
+- Human-in-the-loop threshold: at what verification-confidence cutoff does a response route to a human reviewer instead of auto-answering?
+- Data freshness vs. cache TTL trade-off for the SQL result cache in fast-moving metrics.
+- Whether decomposition (parallel RAG+SQL fan-out) should be router-driven or handled by a separate lightweight planning pass to keep the router node fast.
