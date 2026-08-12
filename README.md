@@ -78,5 +78,29 @@ https://www.youtube.com/playlist?list=PLhgFs9q2EVg_rB-XT1zaJ3k9z0KVGrR2h
 Top 10 Udemy courses:
 https://medium.com/javarevisited/top-10-udemy-courses-to-learn-system-design-and-software-architecture-in-2025-61b0f84aa310 
 My Favorite Udemy Courses to Learn System Design in Depth
-https://medium.com/javarevisited/my-favorite-udemy-courses-to-learn-system-design-in-2023-b64b5c403cea 
+https://medium.com/javarevisited/my-favorite-udemy-courses-to-learn-system-design-in-2023-b64b5c403cea
+
+## Github repos
+10 GitHub Repositories to Master System Design!
+
+1. System Design Primer - https://github.com/donnemartin/system-design-primer
+
+2. System Design 101 - https://github.com/ByteByteGoHq/system-design-101
+
+3. System Design at Scale - https://github.com/karanpratapsingh/system-design
+
+4. Best System Design Resources - https://github.com/ashishps1/awesome-system-design-resources
+
+5. System Design Interview Handbook - https://github.com/checkcheckzz/system-design-interview
+
+6. System Design Academy - https://github.com/systemdesign42/system-design-academy
+
+7. Top System Design Interview Resources - https://github.com/InterviewReady/system-design-resources
+
+8. Machine Learning Systems Design - https://github.com/chiphuyen/machine-learning-systems-design
+
+9. Agentic System Design Patterns - https://github.com/sarwarbeing-ai/Agentic_Design_Patterns
+
+10. Scalability Engineering - https://github.com/binhnguyennus/awesome-scalability
+
 
