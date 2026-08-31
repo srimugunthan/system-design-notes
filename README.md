@@ -103,4 +103,5 @@ https://medium.com/javarevisited/my-favorite-udemy-courses-to-learn-system-desig
 
 10. Scalability Engineering - https://github.com/binhnguyennus/awesome-scalability
 
-
+11. "Notes of the book System Desgin Interview - An Insider's Guide" https://github.com/liquidslr/system-design-notes
+https://pagefy.io/system-design/system-design-interview-by-alex-xu
